@@ -101,7 +101,8 @@ export class PostCreateComponent {
       title: form.value.title,
       content: form.value.content
     };
-    
-    this.postsService.addPosts(post)
+
+    this.postsService.addPosts(post);
+    form.resetForm();
   }
 }

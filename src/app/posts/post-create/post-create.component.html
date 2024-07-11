@@ -18,11 +18,13 @@
 <mat-card>
     <form #postForm="ngForm" (submit)="onAddPost(postForm)">
         <mat-form-field>
+            <mat-label>Post Title</mat-label>
             <input matInput type="text" #title="ngModel" name="title" ngModel required>
             <mat-error *ngIf="title.invalid">"Title is required"</mat-error>
         </mat-form-field>
         <mat-form-field>
-            <textarea matInput rows="6" #content="ngModel" name="content" ngModel required></textarea>
+            <mat-label>Post Content</mat-label>
+            <textarea matInput rows="6" #content="ngModel" name="content" ngModel required placeholder="Post Content"></textarea>
             <mat-error *ngIf="content.invalid">"Content is required"</mat-error>
         </mat-form-field>
         <mat-card-actions>
