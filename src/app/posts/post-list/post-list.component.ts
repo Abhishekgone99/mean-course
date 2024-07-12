@@ -29,18 +29,19 @@ import {MatExpansionModule} from '@angular/material/expansion';
 import { Ipost } from '../post.model';
 import { PostsService } from '../posts.service';
 import { Subscription } from 'rxjs';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-post-list',
   standalone: true,
-  imports: [MatExpansionModule,NgFor ,NgIf],
+  imports: [MatExpansionModule,NgFor ,NgIf,MatButtonModule],
   templateUrl: './post-list.component.html',
   styleUrl: './post-list.component.css'
 })
 export class PostListComponent implements OnInit,OnDestroy {
 
   posts:Ipost[] = [];
-  private postsSub!: Subscription;
+  private postsSub: Subscription= new Subscription();
 
 constructor(public postsService:PostsService){}
 
