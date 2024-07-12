@@ -97,12 +97,12 @@ export class PostCreateComponent {
     if(form.invalid){
       return
     }   
-    const post :Ipost = {
-      title: form.value.title,
-      content: form.value.content
-    };
+    // const post :Ipost = {
+    //   title: form.value.title,
+    //   content: form.value.content
+    // };
 
-    this.postsService.addPosts(post);
+    this.postsService.addPosts(form.value.title,form.value.content);
     form.resetForm();
   }
 }
