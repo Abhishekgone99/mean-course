@@ -71,7 +71,7 @@
 // using service
 
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
 import {MatCardModule} from '@angular/material/card';
 import {MatButtonModule} from '@angular/material/button';
@@ -85,7 +85,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 @Component({
   selector: 'app-post-create',
   standalone: true,
-  imports: [FormsModule,MatInputModule,MatCardModule,MatButtonModule,MatFormFieldModule,MatProgressSpinnerModule ,NgIf],
+  imports: [ReactiveFormsModule,MatInputModule,MatCardModule,MatButtonModule,MatFormFieldModule,MatProgressSpinnerModule ,NgIf],
   templateUrl: './post-create.component.html',
   styleUrl: './post-create.component.css'
 })
@@ -96,10 +96,15 @@ export class PostCreateComponent implements OnInit{
   private postId: string;
   post: Ipost;
   isLoading:boolean = false;
+  form:FormGroup;
 
   constructor(public postsService:PostsService, public route:ActivatedRoute){}
 
   ngOnInit(): void {
+     this.form =new FormGroup({
+      title : new FormControl(null , {validators : [Validators.required,Validators.minLength(3)]}),
+      content : new FormControl(null , {validators: [Validators.required]})
+     })
      this.route.paramMap.subscribe((paramMap:ParamMap )=>{
       if(paramMap.has('postId')){
         this.mode = 'edit';
@@ -109,7 +114,11 @@ export class PostCreateComponent implements OnInit{
         this.postsService.getPost(this.postId).subscribe(postData => {
             this.isLoading = false;
             this.post = { id: postData._id, title: postData.title, content: postData.content};
-        })
+            this.form.setValue({
+              title: this.post.title,
+              content: this.post.content
+            })
+        });
       }else{
         this.mode = 'create';
         this.postId = null;
@@ -117,8 +126,8 @@ export class PostCreateComponent implements OnInit{
      })  
   }
 
-  onSavePost(form: any){
-    if(form.invalid){
+  onSavePost(){
+    if(this.form.invalid){
       return
     }   
     // const post :Ipost = {
@@ -127,12 +136,11 @@ export class PostCreateComponent implements OnInit{
     // };
     this.isLoading = true;
     if(this.mode === 'create'){
-      this.postsService.addPosts(form.value.title,form.value.content);
+      this.postsService.addPosts(this.form.value.title,this.form.value.content);
     }else{
-      this.postsService.updatePost(this.postId,form.value.title,form.value.content)
+      this.postsService.updatePost(this.postId,this.form.value.title,this.form.value.content)
     }
 
-   
-    form.resetForm();
+    this.form.reset();
   }
 }
