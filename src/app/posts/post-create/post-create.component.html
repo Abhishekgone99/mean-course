@@ -16,15 +16,15 @@
 <!-- using Template driven forms -->
 
 <mat-card>
-    <form #postForm="ngForm" (submit)="onAddPost(postForm)">
+    <form #postForm="ngForm" (submit)="onSavePost(postForm)">
         <mat-form-field>
             <mat-label>Post Title</mat-label>
-            <input matInput type="text" #title="ngModel" name="title" ngModel required>
+            <input matInput type="text" #title="ngModel" name="title" [ngModel]="post?.title" required>
             <mat-error *ngIf="title.invalid">"Title is required"</mat-error>
         </mat-form-field>
         <mat-form-field>
             <mat-label>Post Content</mat-label>
-            <textarea matInput rows="6" #content="ngModel" name="content" ngModel required placeholder="Post Content"></textarea>
+            <textarea matInput rows="6" #content="ngModel" name="content" [ngModel]="post?.content" required placeholder="Post Content"></textarea>
             <mat-error *ngIf="content.invalid">"Content is required"</mat-error>
         </mat-form-field>
         <mat-card-actions>

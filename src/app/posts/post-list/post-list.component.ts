@@ -30,11 +30,12 @@ import { Ipost } from '../post.model';
 import { PostsService } from '../posts.service';
 import { Subscription } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-post-list',
   standalone: true,
-  imports: [MatExpansionModule,NgFor ,NgIf,MatButtonModule],
+  imports: [MatExpansionModule,NgFor ,NgIf,MatButtonModule,RouterLink],
   templateUrl: './post-list.component.html',
   styleUrl: './post-list.component.css'
 })
