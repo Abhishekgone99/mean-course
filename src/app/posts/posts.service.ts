@@ -17,11 +17,12 @@ export class PostsService {
   getPosts(){
     this.http.get<{message:string, posts:any}>('http://localhost:3000/api/posts')
     .pipe(map(postData =>{
-      return postData.posts.map((post: { title: any; content: any; _id: any; }) =>{
+      return postData.posts.map((post) =>{
         return {
           title: post.title,
           content:post.content,
-          id:post._id
+          id:post._id,
+          imagePath: post.imagePath
         }
       })
     }))
@@ -45,8 +46,8 @@ export class PostsService {
       postData.append('title',title);
       postData.append('content',content);
       postData.append('image',image, title)
-      this.http.post<{message:string,postId:string}>('http://localhost:3000/api/posts',postData).subscribe((responseData)=>{
-        const newPost: Ipost = {id: responseData.postId, title: title, content: content};
+      this.http.post<{message:string,post: Ipost}>('http://localhost:3000/api/posts',postData).subscribe((responseData)=>{
+        const newPost: Ipost = {id: responseData.post.id, title: title, content: content, imagePath: responseData.post.imagePath};
         this.posts.push(newPost);
         this.postsUpdated.next([...this.posts]);
         this.router.navigate(['/']);
@@ -54,7 +55,7 @@ export class PostsService {
   }
 
   updatePost(id:string, title:string, content:string){
-    const post:Ipost = {id: id, title: title, content: content};
+    const post:Ipost = {id: id, title: title, content: content, imagePath: null};
     this.http.put('http://localhost:3000/api/posts/' + id, post).subscribe((response)=>{
       console.log(response);
     const updatedPosts = [...this.posts];
