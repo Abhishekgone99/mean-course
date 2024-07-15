@@ -31,11 +31,12 @@ import { PostsService } from '../posts.service';
 import { Subscription } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-post-list',
   standalone: true,
-  imports: [MatExpansionModule,NgFor ,NgIf,MatButtonModule,RouterLink],
+  imports: [MatExpansionModule,NgFor ,NgIf,MatButtonModule,RouterLink,MatProgressSpinnerModule],
   templateUrl: './post-list.component.html',
   styleUrl: './post-list.component.css'
 })
@@ -43,13 +44,16 @@ export class PostListComponent implements OnInit,OnDestroy {
 
   posts:Ipost[] = [];
   private postsSub: Subscription= new Subscription();
+  isLoading:boolean = false;
 
 constructor(public postsService:PostsService){}
 
 ngOnInit(): void {
+  this.isLoading =true;
   this.postsService.getPosts();
   
   this.postsService.getPostUpdateListener().subscribe((posts:Ipost[])=>{
+    this.isLoading =false;
     this.posts = posts;
   })
 }

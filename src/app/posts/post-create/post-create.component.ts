@@ -80,11 +80,12 @@ import { Ipost } from '../post.model';
 import { NgIf } from '@angular/common';
 import { PostsService } from '../posts.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-post-create',
   standalone: true,
-  imports: [FormsModule,MatInputModule,MatCardModule,MatButtonModule,MatFormFieldModule,NgIf],
+  imports: [FormsModule,MatInputModule,MatCardModule,MatButtonModule,MatFormFieldModule,MatProgressSpinnerModule ,NgIf],
   templateUrl: './post-create.component.html',
   styleUrl: './post-create.component.css'
 })
@@ -94,6 +95,7 @@ export class PostCreateComponent implements OnInit{
   private mode = 'create';
   private postId: string;
   post: Ipost;
+  isLoading:boolean = false;
 
   constructor(public postsService:PostsService, public route:ActivatedRoute){}
 
@@ -103,7 +105,9 @@ export class PostCreateComponent implements OnInit{
         this.mode = 'edit';
         this.postId = paramMap.get('postId');
         // this.post = this.postsService.getPost(this.postId)
+        this.isLoading = true;
         this.postsService.getPost(this.postId).subscribe(postData => {
+            this.isLoading = false;
             this.post = { id: postData._id, title: postData.title, content: postData.content};
         })
       }else{
@@ -121,6 +125,7 @@ export class PostCreateComponent implements OnInit{
     //   title: form.value.title,
     //   content: form.value.content
     // };
+    this.isLoading = true;
     if(this.mode === 'create'){
       this.postsService.addPosts(form.value.title,form.value.content);
     }else{

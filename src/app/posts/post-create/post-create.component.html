@@ -16,7 +16,8 @@
 <!-- using Template driven forms -->
 
 <mat-card>
-    <form #postForm="ngForm" (submit)="onSavePost(postForm)">
+    <mat-spinner *ngIf="isLoading"></mat-spinner>
+    <form #postForm="ngForm" (submit)="onSavePost(postForm)" *ngIf="!isLoading">
         <mat-form-field>
             <mat-label>Post Title</mat-label>
             <input matInput type="text" #title="ngModel" name="title" [ngModel]="post?.title" required>
