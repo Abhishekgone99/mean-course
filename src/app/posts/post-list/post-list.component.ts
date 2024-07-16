@@ -32,11 +32,12 @@ import { Subscription } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatPaginatorModule, PageEvent} from '@angular/material/paginator';
 
 @Component({
   selector: 'app-post-list',
   standalone: true,
-  imports: [MatExpansionModule,NgFor ,NgIf,MatButtonModule,RouterLink,MatProgressSpinnerModule],
+  imports: [MatExpansionModule,NgFor ,NgIf,MatButtonModule,RouterLink,MatProgressSpinnerModule,MatPaginatorModule],
   templateUrl: './post-list.component.html',
   styleUrl: './post-list.component.css'
 })
@@ -45,21 +46,37 @@ export class PostListComponent implements OnInit,OnDestroy {
   posts:Ipost[] = [];
   private postsSub: Subscription= new Subscription();
   isLoading:boolean = false;
+  totalPosts = 0;
+  currentPage = 1;
+  postsPerPage = 2;
+  pageSizeOptions = [1, 2, 5, 10]
 
 constructor(public postsService:PostsService){}
 
 ngOnInit(): void {
   this.isLoading =true;
-  this.postsService.getPosts();
+  this.postsService.getPosts(this.postsPerPage, this.currentPage);
   
-  this.postsService.getPostUpdateListener().subscribe((posts:Ipost[])=>{
+  this.postsService.getPostUpdateListener().subscribe((postData: {posts:Ipost[],postCount:number})=>{
     this.isLoading =false;
-    this.posts = posts;
+    this.posts = postData.posts;
+    this.totalPosts = postData.postCount;
   })
 }
 
 onDelete(postId: any){
-  this.postsService.deletePost(postId)
+  this.postsService.deletePost(postId).subscribe(()=>{
+    this.isLoading =true;
+    this.postsService.getPosts(this.postsPerPage,this.currentPage)
+  })
+}
+
+onChangePage(pageData: PageEvent){
+  this.isLoading = true;
+  this.currentPage = pageData.pageIndex + 1;
+  this.postsPerPage = pageData.pageSize;
+  this.postsService.getPosts(this.postsPerPage, this.currentPage);
+  console.log(pageData); 
 }
 
 ngOnDestroy(): void {
