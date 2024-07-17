@@ -70,11 +70,19 @@ router.put(
       imagePath: imagePath,
     });
     console.log(post);
-    Post.updateOne({ _id: req.params.id }, post).then((result) => {
-      console.log(result);
-      res.status(200).json({
-        message: "Updated Successfully",
-      });
+    Post.updateOne(
+      { _id: req.params.id, creator: req.userData.userId },
+      post
+    ).then((result) => {
+      if (result.modifiedCount > 0) {
+        res.status(200).json({
+          message: "Updated Successfully",
+        });
+      } else {
+        res.status(401).json({
+          message: "Authorization failed, user not authorized",
+        });
+      }
     });
   }
 );
@@ -114,12 +122,19 @@ router.get("/:id", (req, res, next) => {
 
 router.delete("/:id", checkAuth, (req, res, next) => {
   console.log(req.params.id);
-  Post.deleteOne({ _id: req.params.id }).then((result) => {
-    console.log(result);
-    res.status(200).json({
-      message: "Post deleted Successfully",
-    });
-  });
+  Post.deleteOne({ _id: req.params.id, creator: req.userData.userId }).then(
+    (result) => {
+      if (result.deletedCount > 0) {
+        res.status(200).json({
+          message: "Deleted Successfully",
+        });
+      } else {
+        res.status(401).json({
+          message: "Authorization failed, user not authorized",
+        });
+      }
+    }
+  );
 });
 
 module.exports = router;
