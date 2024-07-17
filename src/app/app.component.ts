@@ -20,23 +20,31 @@
 //   }
 // }
 
-
-
 // using service
 
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterModule, RouterOutlet } from '@angular/router';
-import { PostCreateComponent } from "./posts/post-create/post-create.component";
-import { HeaderComponent } from "./header/header.component";
-import { PostListComponent } from "./posts/post-list/post-list.component";
+import { PostCreateComponent } from './posts/post-create/post-create.component';
+import { HeaderComponent } from './header/header.component';
+import { PostListComponent } from './posts/post-list/post-list.component';
+import { AuthService } from './auth/auth.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterModule ,PostCreateComponent, HeaderComponent, PostListComponent],
+  imports: [
+    RouterOutlet,
+    RouterModule,
+    PostCreateComponent,
+    HeaderComponent,
+    PostListComponent,
+  ],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.css',
 })
-export class AppComponent {
-
+export class AppComponent implements OnInit {
+  constructor(private authService: AuthService) {}
+  ngOnInit(): void {
+    this.authService.autoAuthUser();
+  }
 }
