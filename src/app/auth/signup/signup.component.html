@@ -12,7 +12,7 @@
             <mat-error *ngIf="passwordInput.invalid">"Password is required"</mat-error>
         </mat-form-field>
         <mat-card-actions>
-            <button mat-raised-button color="accent" type="submit">SignUp</button>
+            <button mat-raised-button color="accent" type="submit" *ngIf="!isLoading">SignUp</button>
         </mat-card-actions>
     </form>
 </mat-card>
