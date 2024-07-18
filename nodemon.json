@@ -1,0 +1,7 @@
+{
+    "env":{
+        "MONGO_ATLAS_PW" : "ICRAFclprGekaNuN",
+        "JWT_KEY" : "secret_key_that_should_be_longer_for_better_token"
+
+    }
+}
